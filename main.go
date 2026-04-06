@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-	"weather-cli/api"
+	"weather-cli/service"
 	"weather-cli/ui"
 )
 
@@ -15,20 +15,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	cityName := args[1]
+	cities := args[1:]
 
-	res, err := api.GetCityData(cityName)
-	if err != nil {
-		panic(err)
+	res := service.FetchAll(cities)
+
+	for _, r := range res {
+		ui.PrintWeather(r.City, r.Weather)
 	}
 
-	resp, err := api.GetWeatherData(api.WeatherOptions{
-		Latitude:  res.Latitude,
-		Longitude: res.Longitude,
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	ui.PrintWeather(res, resp)
 }
