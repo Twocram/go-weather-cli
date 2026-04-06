@@ -30,6 +30,7 @@ type OpenMeteoResponse struct {
 
 type CurrentWeather struct {
 	Temperature2M float64 `json:"temperature_2m"`
+	WindSpeed10M  float64 `json:"wind_speed_10m"`
 }
 
 type WeatherResponse struct {

@@ -30,6 +30,7 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println("Response:", resp)
+	fmt.Printf("Temperature: %.1f°C\n", resp.Current.Temperature2M)
+	fmt.Printf("Wind speed:  %.1f km/h\n", resp.Current.WindSpeed10M)
 
 }
