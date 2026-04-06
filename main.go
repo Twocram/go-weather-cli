@@ -4,19 +4,20 @@ import (
 	"fmt"
 	"os"
 	"weather-cli/api"
+	"weather-cli/ui"
 )
 
 func main() {
 	args := os.Args
 
 	if len(args) < 2 {
-		panic("Please provide a city name")
+		fmt.Println("Usage: weather-cli <city>")
+		os.Exit(1)
 	}
 
 	cityName := args[1]
 
 	res, err := api.GetCityData(cityName)
-
 	if err != nil {
 		panic(err)
 	}
@@ -25,12 +26,9 @@ func main() {
 		Latitude:  res.Latitude,
 		Longitude: res.Longitude,
 	})
-
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("Temperature: %.1f°C\n", resp.Current.Temperature2M)
-	fmt.Printf("Wind speed:  %.1f km/h\n", resp.Current.WindSpeed10M)
-
+	ui.PrintWeather(res, resp)
 }
