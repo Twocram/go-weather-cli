@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"weather-cli/config"
 )
 
 type WeatherOptions struct {
@@ -37,7 +38,7 @@ type WeatherResponse struct {
 	Current CurrentWeather `json:"current"`
 }
 
-func GetWeatherData(options WeatherOptions) (*WeatherResponse, error) {
+func GetWeatherData(options WeatherOptions, cfg *config.Config) (*WeatherResponse, error) {
 	url := fmt.Sprintf("https://api.open-meteo.com/v1/forecast?latitude=%v&longitude=%v&current=temperature_2m,wind_speed_10m", options.Latitude, options.Longitude)
 
 	resp, err := http.Get(url)

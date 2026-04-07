@@ -3,6 +3,7 @@ package service
 import (
 	"sync"
 	"weather-cli/api"
+	"weather-cli/config"
 )
 
 type result struct {
@@ -10,7 +11,7 @@ type result struct {
 	Weather *api.WeatherResponse
 }
 
-func FetchAll(cities []string) []result {
+func FetchAll(cfg *config.Config, cities []string) []result {
 	var wg sync.WaitGroup
 
 	results := make([]result, len(cities))
@@ -20,7 +21,7 @@ func FetchAll(cities []string) []result {
 		go func(i int, city string) {
 			defer wg.Done()
 
-			res, err := api.GetCityData(city)
+			res, err := api.GetCityData(city, cfg)
 			if err != nil {
 				panic(err)
 			}
@@ -28,7 +29,7 @@ func FetchAll(cities []string) []result {
 			resp, err := api.GetWeatherData(api.WeatherOptions{
 				Latitude:  res.Latitude,
 				Longitude: res.Longitude,
-			})
+			}, cfg)
 			if err != nil {
 				panic(err)
 			}

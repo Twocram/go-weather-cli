@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"weather-cli/config"
 )
 
 type CityInfo struct {
@@ -28,7 +29,7 @@ type geoResponse struct {
 	Results []CityInfo `json:"results"`
 }
 
-func GetCityData(city string) (*CityInfo, error) {
+func GetCityData(city string, cfg *config.Config) (*CityInfo, error) {
 	response, err := http.Get("https://geocoding-api.open-meteo.com/v1/search?name=" + city + "&count=1")
 	if err != nil {
 		return nil, err
