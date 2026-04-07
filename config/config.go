@@ -13,7 +13,11 @@ type Config struct {
 }
 
 func Load() (*Config, error) {
-	godotenv.Load()
+	err := godotenv.Load()
+
+	if err != nil {
+		return nil, err
+	}
 
 	openMeteoUrl := os.Getenv("OPEN_METEO_API_URL")
 
@@ -28,7 +32,7 @@ func Load() (*Config, error) {
 	}
 
 	return &Config{
-		OpenMeteoAPIKey: os.Getenv("OPEN_METEO_API_KEY"),
-		GeoCodingAPIKey: os.Getenv("GEOCODING_API_KEY"),
+		OpenMeteoAPIKey: openMeteoUrl,
+		GeoCodingAPIKey: geoCodingUrl,
 	}, nil
 }

@@ -30,7 +30,7 @@ type geoResponse struct {
 }
 
 func GetCityData(city string, cfg *config.Config) (*CityInfo, error) {
-	response, err := http.Get("https://geocoding-api.open-meteo.com/v1/search?name=" + city + "&count=1")
+	response, err := http.Get(cfg.GeoCodingAPIKey + "/search?name=" + city + "&count=1")
 	if err != nil {
 		return nil, err
 	}

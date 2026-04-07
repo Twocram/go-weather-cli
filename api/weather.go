@@ -39,7 +39,7 @@ type WeatherResponse struct {
 }
 
 func GetWeatherData(options WeatherOptions, cfg *config.Config) (*WeatherResponse, error) {
-	url := fmt.Sprintf("https://api.open-meteo.com/v1/forecast?latitude=%v&longitude=%v&current=temperature_2m,wind_speed_10m", options.Latitude, options.Longitude)
+	url := fmt.Sprintf(cfg.OpenMeteoAPIKey+"/forecast?latitude=%v&longitude=%v&current=temperature_2m,wind_speed_10m", options.Latitude, options.Longitude)
 
 	resp, err := http.Get(url)
 	if err != nil {
