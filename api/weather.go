@@ -10,6 +10,7 @@ import (
 type WeatherOptions struct {
 	Latitude  float64
 	Longitude float64
+	Units     string
 }
 
 type OpenMeteoResponse struct {
@@ -39,7 +40,13 @@ type WeatherResponse struct {
 }
 
 func GetWeatherData(options WeatherOptions, cfg *config.Config) (*WeatherResponse, error) {
-	url := fmt.Sprintf(cfg.OpenMeteoAPIKey+"/forecast?latitude=%v&longitude=%v&current=temperature_2m,wind_speed_10m", options.Latitude, options.Longitude)
+	tempUnit, windUnit := "celsius", "kmh"
+
+	if options.Units == "imperial" {
+		tempUnit, windUnit = "fahrenheit", "mph"
+	}
+
+	url := fmt.Sprintf(cfg.OpenMeteoAPIKey+"/forecast?latitude=%v&longitude=%v&current=temperature_2m,wind_speed_10m&temperature_unit=%s&wind_speed_unit=%s", options.Latitude, options.Longitude, tempUnit, windUnit)
 
 	resp, err := http.Get(url)
 	if err != nil {

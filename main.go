@@ -1,32 +1,29 @@
 package main
 
 import (
-	"fmt"
-	"os"
+	"flag"
 	"weather-cli/config"
 	"weather-cli/service"
 	"weather-cli/ui"
 )
 
 func main() {
+	units := flag.String("units", "metric", "Unit system: metric or imperial")
+
+	flag.Parse()
+
 	cfg, err := config.Load()
 
 	if err != nil {
 		panic(err)
 	}
-	args := os.Args
 
-	if len(args) < 2 {
-		fmt.Println("Usage: weather-cli <city>")
-		os.Exit(1)
-	}
+	cities := flag.Args()
 
-	cities := args[1:]
-
-	res := service.FetchAll(cfg, cities)
+	res := service.FetchAll(cfg, cities, *units)
 
 	for _, r := range res {
-		ui.PrintWeather(r.City, r.Weather)
+		ui.PrintWeather(r.City, r.Weather, *units)
 	}
 
 }

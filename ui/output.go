@@ -27,16 +27,22 @@ var (
 			Padding(1, 3)
 )
 
-func PrintWeather(city *api.CityInfo, weather *api.WeatherResponse) {
+func PrintWeather(city *api.CityInfo, weather *api.WeatherResponse, units string) {
+	tempChar, windChar := "°C", "km/h"
+
+	if units == "imperial" {
+		tempChar, windChar = "°F", "mph"
+	}
+
 	title := titleStyle.Render(fmt.Sprintf("  %s, %s", city.Name, city.Country))
 
 	temp := fmt.Sprintf("%s  %s",
 		labelStyle.Render("Temperature"),
-		valueStyle.Render(fmt.Sprintf("%.1f°C", weather.Current.Temperature2M)),
+		valueStyle.Render(fmt.Sprintf("%.1f%s", weather.Current.Temperature2M, tempChar)),
 	)
 	wind := fmt.Sprintf("%s  %s",
 		labelStyle.Render("Wind speed "),
-		valueStyle.Render(fmt.Sprintf("%.1f km/h", weather.Current.WindSpeed10M)),
+		valueStyle.Render(fmt.Sprintf("%.1f %s", weather.Current.WindSpeed10M, windChar)),
 	)
 
 	body := containerStyle.Render(fmt.Sprintf("%s\n%s", temp, wind))

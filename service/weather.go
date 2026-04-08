@@ -11,7 +11,7 @@ type result struct {
 	Weather *api.WeatherResponse
 }
 
-func FetchAll(cfg *config.Config, cities []string) []result {
+func FetchAll(cfg *config.Config, cities []string, units string) []result {
 	var wg sync.WaitGroup
 
 	results := make([]result, len(cities))
@@ -29,7 +29,9 @@ func FetchAll(cfg *config.Config, cities []string) []result {
 			resp, err := api.GetWeatherData(api.WeatherOptions{
 				Latitude:  res.Latitude,
 				Longitude: res.Longitude,
+				Units:     units,
 			}, cfg)
+
 			if err != nil {
 				panic(err)
 			}
