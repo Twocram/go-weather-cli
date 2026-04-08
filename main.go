@@ -8,7 +8,8 @@ import (
 )
 
 func main() {
-	units := flag.String("units", "metric", "Unit system: metric or imperial")
+	units    := flag.String("units", "metric", "Unit system: metric or imperial")
+	forecast := flag.Bool("forecast", false, "Show 7-day forecast")
 
 	flag.Parse()
 
@@ -20,10 +21,10 @@ func main() {
 
 	cities := flag.Args()
 
-	res := service.FetchAll(cfg, cities, *units)
+	res := service.FetchAll(cfg, cities, *units, *forecast)
 
 	for _, r := range res {
-		ui.PrintWeather(r.City, r.Weather, *units)
+		ui.PrintWeather(r.City, r.Weather, *units, *forecast)
 	}
 
 }

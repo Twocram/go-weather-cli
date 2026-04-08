@@ -11,6 +11,7 @@ type WeatherOptions struct {
 	Latitude  float64
 	Longitude float64
 	Units     string
+	Forecast  bool
 }
 
 type OpenMeteoResponse struct {
@@ -35,18 +36,30 @@ type CurrentWeather struct {
 	WindSpeed10M  float64 `json:"wind_speed_10m"`
 }
 
+type DailyWeather struct {
+	Time             []string  `json:"time"`
+	Temperature2MMax []float64 `json:"temperature_2m_max"`
+	Temperature2MMin []float64 `json:"temperature_2m_min"`
+}
+
 type WeatherResponse struct {
 	Current CurrentWeather `json:"current"`
+	Daily   DailyWeather   `json:"daily"`
 }
 
 func GetWeatherData(options WeatherOptions, cfg *config.Config) (*WeatherResponse, error) {
 	tempUnit, windUnit := "celsius", "kmh"
-
 	if options.Units == "imperial" {
 		tempUnit, windUnit = "fahrenheit", "mph"
 	}
 
 	url := fmt.Sprintf(cfg.OpenMeteoAPIKey+"/forecast?latitude=%v&longitude=%v&current=temperature_2m,wind_speed_10m&temperature_unit=%s&wind_speed_unit=%s", options.Latitude, options.Longitude, tempUnit, windUnit)
+
+	if options.Forecast {
+		url += "&daily=temperature_2m_max,temperature_2m_min&forecast_days=7"
+	} else {
+		url += "&forecast_days=1"
+	}
 
 	resp, err := http.Get(url)
 	if err != nil {
