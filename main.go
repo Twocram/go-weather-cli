@@ -2,13 +2,15 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"os"
 	"weather-cli/config"
 	"weather-cli/service"
 	"weather-cli/ui"
 )
 
 func main() {
-	units    := flag.String("units", "metric", "Unit system: metric or imperial")
+	units := flag.String("units", "metric", "Unit system: metric or imperial")
 	forecast := flag.Bool("forecast", false, "Show 7-day forecast")
 
 	flag.Parse()
@@ -20,6 +22,19 @@ func main() {
 	}
 
 	cities := flag.Args()
+
+	if len(cities) == 0 {
+		if service.FavoritesFileExist() {
+			loaded, err := service.LoadFavorites()
+			if err != nil {
+				panic(err)
+			}
+			cities = loaded
+		} else {
+			fmt.Println("Usage: weather-cli [--units metric|imperial] <city>...")
+			os.Exit(1)
+		}
+	}
 
 	res := service.FetchAll(cfg, cities, *units, *forecast)
 
