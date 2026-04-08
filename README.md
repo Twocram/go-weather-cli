@@ -11,6 +11,8 @@ Give it one city or a few, and it will fetch the current temperature and wind sp
 - Supports multiple cities at once 🏙️
 - Fetches cities concurrently with goroutines ⚡
 - Lets you choose `metric` or `imperial` units 🌡️
+- Shows a 7-day forecast table with `--forecast` 📅
+- Save, list, and remove favorite cities ⭐
 - Prints friendly styled output with `lipgloss` 🎀
 
 ## Preview 👀
@@ -69,7 +71,7 @@ go run . Seoul Berlin Lisbon
 ## Usage 🧭
 
 ```bash
-go run . [--units metric|imperial] <city> [more cities...]
+go run . [--units metric|imperial] [--forecast] [--action save|list|remove] <city> [more cities...]
 ```
 
 Examples:
@@ -78,6 +80,10 @@ Examples:
 go run . Paris
 go run . --units imperial Chicago
 go run . --units metric Tbilisi Yerevan Baku
+go run . --forecast London
+go run . --action save Rome Paris
+go run . --action list
+go run . --action remove Rome
 ```
 
 ## Docker 🐳
@@ -106,12 +112,10 @@ docker run --rm \
 
 ## Tiny roadmap 🌱
 
-- 7-day forecast 📅
-- Favorite cities ⭐
+- Fan-out/fan-in pipeline with channels ⚡
 
 ## Notes 💡
 
-- Right now the CLI prints current temperature and wind speed only.
 - The project expects `.env` to be present when running locally.
 - Errors currently fail fast with `panic`, so graceful error handling would be a nice next polish step.
 
