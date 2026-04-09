@@ -2,17 +2,18 @@
 
 A tiny, cute Go CLI that asks the sky how it's feeling 🌤️
 
-Give it one city or a few, and it will fetch the current temperature and wind speed in a clean little terminal card.
+Give it one city or a few, and it will fetch the current weather in clean little terminal cards. It can also keep a tiny list of favorite cities for you ⭐
 
 ## What it does ✨
 
 - Looks up a city with the geocoding API 🗺️
 - Fetches current weather from Open-Meteo 🌦️
 - Supports multiple cities at once 🏙️
-- Fetches cities concurrently with goroutines ⚡
+- Fetches cities concurrently with goroutines and channels ⚡
 - Lets you choose `metric` or `imperial` units 🌡️
 - Shows a 7-day forecast table with `--forecast` 📅
-- Save, list, and remove favorite cities ⭐
+- Saves, lists, and removes favorite cities in `favorites.json` ⭐
+- Uses your saved favorites automatically when you run it without city arguments 💫
 - Prints friendly styled output with `lipgloss` 🎀
 
 ## Preview 👀
@@ -29,6 +30,12 @@ go run . Moscow Tokyo Paris
   Tokyo, Japan
   Temperature  17.1°C
   Wind speed   9.3 km/h
+```
+
+With forecast mode:
+
+```bash
+go run . --forecast London
 ```
 
 ## Quick start 🚀
@@ -68,6 +75,12 @@ Or a tiny weather parade 🎈:
 go run . Seoul Berlin Lisbon
 ```
 
+Or ask for the next 7 days:
+
+```bash
+go run . --forecast Lisbon
+```
+
 ## Usage 🧭
 
 ```bash
@@ -84,6 +97,40 @@ go run . --forecast London
 go run . --action save Rome Paris
 go run . --action list
 go run . --action remove Rome
+```
+
+If `favorites.json` exists, you can also run:
+
+```bash
+go run .
+```
+
+That will load your saved favorite cities automatically.
+
+## Favorites ⭐
+
+Save a few cities:
+
+```bash
+go run . --action save Rome Paris Tokyo
+```
+
+List them:
+
+```bash
+go run . --action list
+```
+
+Remove one:
+
+```bash
+go run . --action remove Rome
+```
+
+Then later, just run:
+
+```bash
+go run .
 ```
 
 ## Docker 🐳
@@ -112,12 +159,16 @@ docker run --rm \
 
 ## Tiny roadmap 🌱
 
-- Fan-out/fan-in pipeline with channels ⚡
+- Friendlier error messages
+- Duplicate-safe favorites
+- Tests for forecast and favorites flows
 
 ## Notes 💡
 
 - The project expects `.env` to be present when running locally.
-- Errors currently fail fast with `panic`, so graceful error handling would be a nice next polish step.
+- Favorites are stored in project-local `favorites.json`.
+- Results are fetched concurrently, so output order may differ from the order of city arguments.
+- Errors currently fail fast with `panic`, so graceful error handling would be a lovely next polish step.
 
 ## License 📄
 
