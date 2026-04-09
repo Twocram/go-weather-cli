@@ -1,7 +1,6 @@
 package service
 
 import (
-	"sync"
 	"weather-cli/api"
 	"weather-cli/config"
 )
@@ -12,15 +11,10 @@ type result struct {
 }
 
 func FetchAll(cfg *config.Config, cities []string, units string, forecast bool) []result {
-	var wg sync.WaitGroup
+	results := make(chan result, len(cities))
 
-	results := make([]result, len(cities))
-
-	for i, city := range cities {
-		wg.Add(1)
-		go func(i int, city string) {
-			defer wg.Done()
-
+	for _, city := range cities {
+		go func(city string) {
 			res, err := api.GetCityData(city, cfg)
 			if err != nil {
 				panic(err)
@@ -32,16 +26,21 @@ func FetchAll(cfg *config.Config, cities []string, units string, forecast bool) 
 				Units:     units,
 				Forecast:  forecast,
 			}, cfg)
-
 			if err != nil {
 				panic(err)
 			}
 
-			results[i] = result{res, resp}
-		}(i, city)
+			results <- result{
+				City:    res,
+				Weather: resp,
+			}
+		}(city)
 	}
 
-	wg.Wait()
+	out := make([]result, len(cities))
+	for i := range out {
+		out[i] = <-results
+	}
 
-	return results
+	return out
 }
