@@ -4,9 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"weather-cli/config"
-	"weather-cli/service"
-	"weather-cli/ui"
+	"weather-cli/internal/config"
+	"weather-cli/internal/service"
+	"weather-cli/internal/ui"
 )
 
 func main() {

@@ -3,7 +3,7 @@ package ui
 import (
 	"fmt"
 	"strings"
-	"weather-cli/api"
+	"weather-cli/internal/api"
 
 	"charm.land/lipgloss/v2"
 )

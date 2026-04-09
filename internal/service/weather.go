@@ -1,8 +1,8 @@
 package service
 
 import (
-	"weather-cli/api"
-	"weather-cli/config"
+	"weather-cli/internal/api"
+	"weather-cli/internal/config"
 )
 
 type result struct {

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"weather-cli/config"
+	"weather-cli/internal/config"
 )
 
 type WeatherOptions struct {
