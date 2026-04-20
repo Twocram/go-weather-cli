@@ -26,7 +26,31 @@ var (
 			Border(lipgloss.RoundedBorder()).
 			BorderForeground(lipgloss.Color("#7D56F4")).
 			Padding(1, 3)
+
+	errorTitleStyle = lipgloss.NewStyle().
+			Bold(true).
+			Foreground(lipgloss.Color("#FAFAFA")).
+			Background(lipgloss.Color("#D7263D")).
+			Padding(0, 2)
+
+	errorBodyStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("#D7263D")).
+			Padding(1, 3)
 )
+
+func PrintError(err error) {
+	if err == nil {
+		return
+	}
+
+	title := errorTitleStyle.Render("  Error")
+	body := errorBodyStyle.Render(valueStyle.Render(err.Error()))
+
+	fmt.Println()
+	fmt.Println(title)
+	fmt.Println(body)
+}
 
 func PrintWeather(city *api.CityInfo, weather *api.WeatherResponse, units string, forecast bool) {
 	tempChar, windChar := "°C", "km/h"
@@ -54,12 +78,12 @@ func PrintWeather(city *api.CityInfo, weather *api.WeatherResponse, units string
 
 	if forecast {
 		highStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF6B6B"))
-		lowStyle  := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#74C7EC"))
+		lowStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#74C7EC"))
 		headStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#7D56F4"))
 
 		dateW := lipgloss.NewStyle().Width(14)
 		highW := lipgloss.NewStyle().Width(12)
-		lowW  := lipgloss.NewStyle().Width(12)
+		lowW := lipgloss.NewStyle().Width(12)
 
 		header := dateW.Render(headStyle.Render("Date")) +
 			highW.Render(headStyle.Render("High")) +

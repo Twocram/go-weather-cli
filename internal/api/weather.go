@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"weather-cli/internal/config"
 )
@@ -65,7 +66,12 @@ func GetWeatherData(options WeatherOptions, cfg *config.Config) (*WeatherRespons
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(resp.Body)
 
 	var weatherResp WeatherResponse
 	if err := json.NewDecoder(resp.Body).Decode(&weatherResp); err != nil {

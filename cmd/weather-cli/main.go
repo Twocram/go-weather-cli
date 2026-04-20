@@ -19,25 +19,28 @@ func main() {
 	cfg, err := config.Load()
 
 	if err != nil {
-		panic(err)
+		ui.PrintError(err)
+		os.Exit(1)
 	}
 
 	switch *action {
 	case "save":
 		if len(flag.Args()) == 0 {
-			fmt.Println("Usage: weather-cli --action save <city>...")
+			ui.PrintError(fmt.Errorf("usage: weather-cli --action save <city>..."))
 			os.Exit(1)
 		}
 
 		if err := service.SaveFavorites(flag.Args()); err != nil {
-			panic(err)
+			ui.PrintError(err)
+			os.Exit(1)
 		}
 
 		return
 	case "list":
 		cities, err := service.LoadFavorites()
 		if err != nil {
-			panic(err)
+			ui.PrintError(err)
+			os.Exit(1)
 		}
 		for _, city := range cities {
 			fmt.Println(city)
@@ -45,10 +48,13 @@ func main() {
 		return
 	case "remove":
 		if len(flag.Args()) == 0 {
-			fmt.Println("Usage: weather-cli --action save <city>...")
+			ui.PrintError(fmt.Errorf("usage: weather-cli --action save <city>..."))
 			os.Exit(1)
 		}
-		service.RemoveFavorites(flag.Args())
+		if err := service.RemoveFavorites(flag.Args()); err != nil {
+			ui.PrintError(err)
+			os.Exit(1)
+		}
 		return
 	}
 
@@ -58,11 +64,12 @@ func main() {
 		if service.FavoritesFileExist() {
 			loaded, err := service.LoadFavorites()
 			if err != nil {
-				panic(err)
+				ui.PrintError(err)
+				os.Exit(1)
 			}
 			cities = loaded
 		} else {
-			fmt.Println("Usage: weather-cli [--units metric|imperial] <city>...")
+			ui.PrintError(fmt.Errorf("usage: weather-cli [--units metric|imperial] <city>..."))
 			os.Exit(1)
 		}
 	}
